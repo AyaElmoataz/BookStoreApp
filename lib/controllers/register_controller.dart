@@ -5,12 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../pages/home_page.dart';
 
-// Simple Provider to access the controller
-final loginControllerProvider = Provider((ref) => LoginController(ref));
+final registerControllerProvider = Provider((ref) => RegisterController(ref));
 
-class LoginController {
+class RegisterController {
   final Ref ref;
-  LoginController(this.ref);
+  RegisterController(this.ref);
 
   String? email;
   String? password;
@@ -18,7 +17,7 @@ class LoginController {
   void updateEmail(String value) => email = value;
   void updatePassword(String value) => password = value;
 
-  Future<void> login(BuildContext context) async {
+  Future<void> register(BuildContext context) async {
     if (email == null ||
         password == null ||
         email!.isEmpty ||
@@ -36,12 +35,13 @@ class LoginController {
     ref.read(loadingProvider.notifier).startLoading();
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email!.trim(),
         password: password!,
       );
 
       if (context.mounted) {
+        _showSnackBar(context, AppStrings.registerSuccess);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomePage()),
@@ -49,10 +49,10 @@ class LoginController {
       }
     } on FirebaseAuthException catch (e) {
       String message = AppStrings.errorGeneric;
-      if (e.code == 'user-not-found' || e.code == 'invalid-credential') {
-        message = AppStrings.errorUserNotFound;
-      } else if (e.code == 'wrong-password') {
-        message = AppStrings.errorWrongPassword;
+      if (e.code == 'email-already-in-use') {
+        message = AppStrings.errorEmailInUse;
+      } else if (e.code == 'weak-password') {
+        message = AppStrings.errorWeakPassword;
       }
       if (context.mounted) _showSnackBar(context, message);
     } catch (e) {
