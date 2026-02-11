@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
-  CustomTextField({this.hintText});
+  CustomTextField({this.hintText, this.isPassword = false, this.onChanged});
 
-  String? hintText;
+  final String? hintText;
+  final bool isPassword;
+  final Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      obscureText: isPassword,
+      onChanged: onChanged,
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(color: Color(0xff009cda)),
