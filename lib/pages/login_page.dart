@@ -1,5 +1,5 @@
 import 'package:book_store_app/constants/app_strings.dart';
-import 'package:book_store_app/constants/constants.dart';
+import 'package:book_store_app/constants/app_colors.dart';
 import 'package:book_store_app/pages/register_page.dart';
 import 'package:book_store_app/providers/loading_provider.dart';
 import 'package:book_store_app/controllers/login_controller.dart';

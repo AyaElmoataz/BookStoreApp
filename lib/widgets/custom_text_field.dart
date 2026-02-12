@@ -1,3 +1,4 @@
+import 'package:book_store_app/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -14,12 +15,12 @@ class CustomTextField extends StatelessWidget {
       onChanged: onChanged,
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: TextStyle(color: Color(0xff009cda)),
+        hintStyle: TextStyle(color: kSecondaryColor),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color(0xff004380)),
+          borderSide: BorderSide(color: kPrimaryColor),
         ),
         border: OutlineInputBorder(
-          borderSide: BorderSide(color: Color(0xff004380)),
+          borderSide: BorderSide(color: kPrimaryColor),
         ),
       ),
     );

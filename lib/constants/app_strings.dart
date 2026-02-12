@@ -19,7 +19,6 @@ class AppStrings {
 
   // Messages
   static const String registerSuccess = 'Account created successfully!';
-  static const String errorEmptyFields = 'Email/Password is empty.';
   static const String errorInvalidEmail = 'Please enter a valid email address.';
   static const String errorEmailInUse =
       'An account already exists for that email.';

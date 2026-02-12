@@ -1,4 +1,4 @@
-import 'package:book_store_app/constants/constants.dart';
+import 'package:book_store_app/constants/app_colors.dart';
 import 'package:book_store_app/constants/app_strings.dart';
 import 'package:book_store_app/controllers/register_controller.dart';
 import 'package:book_store_app/providers/loading_provider.dart';

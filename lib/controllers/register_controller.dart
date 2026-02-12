@@ -1,5 +1,6 @@
 import 'package:book_store_app/constants/app_strings.dart';
 import 'package:book_store_app/providers/loading_provider.dart';
+import 'package:book_store_app/utils/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,15 +19,30 @@ class RegisterController {
   void updatePassword(String value) => password = value;
 
   Future<void> register(BuildContext context) async {
-    if (email == null ||
-        password == null ||
-        email!.isEmpty ||
-        password!.isEmpty) {
-      _showSnackBar(context, AppStrings.errorEmptyFields);
+    String? emailValidationResult;
+    String? passwordValidationResult;
+
+    emailValidationResult = AuthValidators.validateRequiredFields(
+      email,
+      AppStrings.emailHint,
+    );
+
+    if (emailValidationResult != null) {
+      _showSnackBar(context, emailValidationResult);
       return;
     }
 
-    if (!_isValidEmail()) {
+    passwordValidationResult = AuthValidators.validateRequiredFields(
+      password,
+      AppStrings.passwordHint,
+    );
+
+    if (passwordValidationResult != null) {
+      _showSnackBar(context, passwordValidationResult);
+      return;
+    }
+
+    if (!AuthValidators().validateEmail(email!)) {
       _showSnackBar(context, AppStrings.errorInvalidEmail);
       return;
     }
@@ -60,10 +76,6 @@ class RegisterController {
     } finally {
       ref.read(loadingProvider.notifier).stopLoading();
     }
-  }
-
-  bool _isValidEmail() {
-    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email!);
   }
 
   void _showSnackBar(BuildContext context, String text) {
