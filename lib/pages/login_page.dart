@@ -1,7 +1,7 @@
 import 'package:book_store_app/constants/app_strings.dart';
 import 'package:book_store_app/constants/app_colors.dart';
 import 'package:book_store_app/pages/register_page.dart';
-import 'package:book_store_app/providers/loading_provider.dart';
+import 'package:book_store_app/providers/login_loading_provider.dart';
 import 'package:book_store_app/controllers/login_controller.dart';
 import 'package:book_store_app/widgets/custom_button.dart';
 import 'package:book_store_app/widgets/custom_text_field.dart';
@@ -14,7 +14,7 @@ class LoginPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isLoading = ref.watch(loadingProvider);
+    final isLoading = ref.watch(loginLoadingProvider);
     final controller = ref.read(loginControllerProvider);
 
     return ModalProgressHUD(

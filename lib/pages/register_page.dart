@@ -1,7 +1,7 @@
 import 'package:book_store_app/constants/app_colors.dart';
 import 'package:book_store_app/constants/app_strings.dart';
 import 'package:book_store_app/controllers/register_controller.dart';
-import 'package:book_store_app/providers/loading_provider.dart';
+import 'package:book_store_app/providers/register_loading_provider.dart';
 import 'package:book_store_app/widgets/custom_button.dart';
 import 'package:book_store_app/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ class RegisterPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isLoading = ref.watch(loadingProvider);
+    final isLoading = ref.watch(registerLoadingProvider);
     final controller = ref.read(registerControllerProvider);
 
     return ModalProgressHUD(
