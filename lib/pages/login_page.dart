@@ -15,7 +15,9 @@ class LoginPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = ref.watch(loginLoadingProvider);
-    final controller = ref.read(loginControllerProvider);
+
+    String email = '';
+    String password = '';
 
     return ModalProgressHUD(
       inAsyncCall: isLoading,
@@ -46,17 +48,19 @@ class LoginPage extends ConsumerWidget {
               CustomTextField(
                 hintText: AppStrings.emailHint,
                 isPassword: false,
-                onChanged: (data) => controller.updateEmail(data),
+                onChanged: (data) => email = data,
               ),
               const SizedBox(height: 10),
               CustomTextField(
                 hintText: AppStrings.passwordHint,
                 isPassword: true,
-                onChanged: (data) => controller.updatePassword(data),
+                onChanged: (data) => password = data,
               ),
               const SizedBox(height: 10),
               CustomButton(
-                onTap: () => controller.login(context),
+                onTap: () => ref
+                    .read(loginControllerProvider)
+                    .login(context, email, password),
                 text: AppStrings.loginButton,
               ),
               const Spacer(flex: 1),

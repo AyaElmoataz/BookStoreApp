@@ -14,7 +14,9 @@ class RegisterPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = ref.watch(registerLoadingProvider);
-    final controller = ref.read(registerControllerProvider);
+
+    String email = '';
+    String password = '';
 
     return ModalProgressHUD(
       inAsyncCall: isLoading,
@@ -45,17 +47,19 @@ class RegisterPage extends ConsumerWidget {
               CustomTextField(
                 hintText: AppStrings.emailHint,
                 isPassword: false,
-                onChanged: (data) => controller.updateEmail(data),
+                onChanged: (data) => email = data,
               ),
               const SizedBox(height: 10),
               CustomTextField(
                 hintText: AppStrings.passwordHint,
                 isPassword: true,
-                onChanged: (data) => controller.updatePassword(data),
+                onChanged: (data) => password = data,
               ),
               const SizedBox(height: 10),
               CustomButton(
-                onTap: () => controller.register(context),
+                onTap: () => ref
+                    .read(registerControllerProvider)
+                    .register(context, email, password),
                 text: AppStrings.registerButton,
               ),
               const Spacer(flex: 1),

@@ -16,13 +16,11 @@ class LoginController {
   final Ref ref;
   LoginController(this.ref);
 
-  String? email;
-  String? password;
-
-  void updateEmail(String value) => email = value;
-  void updatePassword(String value) => password = value;
-
-  Future<void> login(BuildContext context) async {
+  Future<void> login(
+    BuildContext context,
+    String email,
+    String password,
+  ) async {
     String? emailValidationResult;
     String? passwordValidationResult;
 
@@ -46,7 +44,7 @@ class LoginController {
       return;
     }
 
-    if (!AuthValidators().validateEmail(email!)) {
+    if (!AuthValidators().validateEmail(email)) {
       _showSnackBar(context, AppStrings.errorInvalidEmail);
       return;
     }
@@ -61,8 +59,8 @@ class LoginController {
 
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email!.trim(),
-        password: password!,
+        email: email.trim(),
+        password: password,
       );
 
       if (context.mounted) {

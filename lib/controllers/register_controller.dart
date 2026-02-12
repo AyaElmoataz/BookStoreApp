@@ -14,13 +14,11 @@ class RegisterController {
   RegisterController(this.ref);
   final networkService = NetworkService();
 
-  String? email;
-  String? password;
-
-  void updateEmail(String value) => email = value;
-  void updatePassword(String value) => password = value;
-
-  Future<void> register(BuildContext context) async {
+  Future<void> register(
+    BuildContext context,
+    String email,
+    String password,
+  ) async {
     String? emailValidationResult;
     String? passwordValidationResult;
 
@@ -59,8 +57,8 @@ class RegisterController {
 
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email!.trim(),
-        password: password!,
+        email: email.trim(),
+        password: password,
       );
 
       if (context.mounted) {
