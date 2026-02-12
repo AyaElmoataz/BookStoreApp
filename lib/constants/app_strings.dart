@@ -26,4 +26,6 @@ class AppStrings {
   static const String errorUserNotFound = 'No user found for that email.';
   static const String errorWeakPassword = 'The password provided is too weak.';
   static const String errorGeneric = 'An error happened, please try again.';
+  static const String errorInternetConnection =
+      'Please check your internet connection.';
 }

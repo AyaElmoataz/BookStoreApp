@@ -1,5 +1,6 @@
 import 'package:book_store_app/constants/app_strings.dart';
 import 'package:book_store_app/providers/loading_provider.dart';
+import 'package:book_store_app/services/network_service.dart';
 import 'package:book_store_app/utils/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,8 @@ import '../pages/home_page.dart';
 
 // Simple Provider to access the controller
 final loginControllerProvider = Provider((ref) => LoginController(ref));
+
+final networkService = NetworkService();
 
 class LoginController {
   final Ref ref;
@@ -45,6 +48,11 @@ class LoginController {
 
     if (!AuthValidators().validateEmail(email!)) {
       _showSnackBar(context, AppStrings.errorInvalidEmail);
+      return;
+    }
+
+    if (!await networkService.isConnected() && context.mounted) {
+      _showSnackBar(context, AppStrings.errorInternetConnection);
       return;
     }
 
