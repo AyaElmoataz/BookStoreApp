@@ -1,6 +1,7 @@
 import 'package:book_store_app/constants/app_strings.dart';
 import 'package:book_store_app/providers/register_loading_provider.dart';
 import 'package:book_store_app/services/network_service.dart';
+import 'package:book_store_app/utils/auth_error_helper.dart';
 import 'package:book_store_app/utils/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -68,16 +69,8 @@ class RegisterController {
           MaterialPageRoute(builder: (context) => const HomePage()),
         );
       }
-    } on FirebaseAuthException catch (e) {
-      String message = AppStrings.errorGeneric;
-      if (e.code == 'email-already-in-use') {
-        message = AppStrings.errorEmailInUse;
-      } else if (e.code == 'weak-password') {
-        message = AppStrings.errorWeakPassword;
-      }
-      if (context.mounted) _showSnackBar(context, message);
     } catch (e) {
-      if (context.mounted) _showSnackBar(context, AppStrings.errorGeneric);
+      if (context.mounted) _showSnackBar(context, AuthErrorHelper.message(e));
     } finally {
       ref.read(registerLoadingProvider.notifier).stopLoading();
     }

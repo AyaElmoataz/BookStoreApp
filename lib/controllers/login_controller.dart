@@ -1,6 +1,7 @@
 import 'package:book_store_app/constants/app_strings.dart';
 import 'package:book_store_app/providers/login_loading_provider.dart';
 import 'package:book_store_app/services/network_service.dart';
+import 'package:book_store_app/utils/auth_error_helper.dart';
 import 'package:book_store_app/utils/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -69,16 +70,8 @@ class LoginController {
           MaterialPageRoute(builder: (context) => const HomePage()),
         );
       }
-    } on FirebaseAuthException catch (e) {
-      String message = AppStrings.errorGeneric;
-      if (e.code == 'user-not-found' || e.code == 'invalid-credential') {
-        message = AppStrings.errorUserNotFound;
-      } else if (e.code == 'wrong-password') {
-        message = AppStrings.errorWrongPassword;
-      }
-      if (context.mounted) _showSnackBar(context, message);
     } catch (e) {
-      if (context.mounted) _showSnackBar(context, AppStrings.errorGeneric);
+      if (context.mounted) _showSnackBar(context, AuthErrorHelper.message(e));
     } finally {
       ref.read(loginLoadingProvider.notifier).stopLoading();
     }
