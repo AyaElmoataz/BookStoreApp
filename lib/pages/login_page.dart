@@ -9,15 +9,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
-class LoginPage extends ConsumerWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class LoginPage extends ConsumerStatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isLoading = ref.watch(loginLoadingProvider);
+  ConsumerState<LoginPage> createState() => _LoginPageState();
+}
 
-    String email = '';
-    String password = '';
+class _LoginPageState extends ConsumerState<LoginPage> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isLoading = ref.watch(loginLoadingProvider);
 
     return ModalProgressHUD(
       inAsyncCall: isLoading,
@@ -48,19 +60,23 @@ class LoginPage extends ConsumerWidget {
               CustomTextField(
                 hintText: AppStrings.emailHint,
                 isPassword: false,
-                onChanged: (data) => email = data,
+                controller: emailController,
               ),
               const SizedBox(height: 10),
               CustomTextField(
                 hintText: AppStrings.passwordHint,
                 isPassword: true,
-                onChanged: (data) => password = data,
+                controller: passwordController,
               ),
               const SizedBox(height: 10),
               CustomButton(
                 onTap: () => ref
                     .read(loginControllerProvider)
-                    .login(context, email, password),
+                    .login(
+                      context,
+                      emailController.text.trim(),
+                      passwordController.text.trim(),
+                    ),
                 text: AppStrings.loginButton,
               ),
               const Spacer(flex: 1),

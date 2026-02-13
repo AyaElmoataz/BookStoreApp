@@ -8,15 +8,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
-class RegisterPage extends ConsumerWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+class RegisterPage extends ConsumerStatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isLoading = ref.watch(registerLoadingProvider);
+  ConsumerState<RegisterPage> createState() => _RegisterPageState();
+}
 
-    String email = '';
-    String password = '';
+class _RegisterPageState extends ConsumerState<RegisterPage> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isLoading = ref.watch(registerLoadingProvider);
 
     return ModalProgressHUD(
       inAsyncCall: isLoading,
@@ -47,19 +59,23 @@ class RegisterPage extends ConsumerWidget {
               CustomTextField(
                 hintText: AppStrings.emailHint,
                 isPassword: false,
-                onChanged: (data) => email = data,
+                controller: emailController,
               ),
               const SizedBox(height: 10),
               CustomTextField(
                 hintText: AppStrings.passwordHint,
                 isPassword: true,
-                onChanged: (data) => password = data,
+                controller: passwordController,
               ),
               const SizedBox(height: 10),
               CustomButton(
                 onTap: () => ref
                     .read(registerControllerProvider)
-                    .register(context, email, password),
+                    .register(
+                      context,
+                      emailController.text.trim(),
+                      passwordController.text.trim(),
+                    ),
                 text: AppStrings.registerButton,
               ),
               const Spacer(flex: 1),
