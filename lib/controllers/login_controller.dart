@@ -2,7 +2,7 @@ import 'package:book_store_app/constants/app_strings.dart';
 import 'package:book_store_app/providers/login_loading_provider.dart';
 import 'package:book_store_app/services/network_service.dart';
 import 'package:book_store_app/utils/auth_error_helper.dart';
-import 'package:book_store_app/utils/validators.dart';
+import 'package:book_store_app/utils/auth_validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,8 +10,6 @@ import '../pages/home_page.dart';
 
 // Simple Provider to access the controller
 final loginControllerProvider = Provider((ref) => LoginController(ref));
-
-final networkService = NetworkService();
 
 class LoginController {
   final Ref ref;
@@ -22,35 +20,17 @@ class LoginController {
     String email,
     String password,
   ) async {
-    String? emailValidationResult;
-    String? passwordValidationResult;
-
-    emailValidationResult = AuthValidators.validateRequiredFields(
+    String? authValidationResult = AuthValidators().validateAuth(
       email,
-      AppStrings.emailHint,
-    );
-
-    if (emailValidationResult != null) {
-      _showSnackBar(context, emailValidationResult);
-      return;
-    }
-
-    passwordValidationResult = AuthValidators.validateRequiredFields(
       password,
-      AppStrings.passwordHint,
     );
 
-    if (passwordValidationResult != null) {
-      _showSnackBar(context, passwordValidationResult);
+    if (authValidationResult != null) {
+      _showSnackBar(context, authValidationResult);
       return;
     }
 
-    if (!AuthValidators().validateEmail(email)) {
-      _showSnackBar(context, AppStrings.errorInvalidEmail);
-      return;
-    }
-
-    if (!await networkService.isConnected() && context.mounted) {
+    if (!await NetworkService().isConnected() && context.mounted) {
       _showSnackBar(context, AppStrings.errorInternetConnection);
       return;
     }
