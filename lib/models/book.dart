@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 part 'book.g.dart';
 
 @HiveType(typeId: 0)
-class Book extends HiveObject {
+class Book {
   // Common fields
 
   @HiveField(0)
