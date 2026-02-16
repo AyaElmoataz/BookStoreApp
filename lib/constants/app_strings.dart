@@ -28,4 +28,11 @@ class AppStrings {
   static const String errorGeneric = 'An error happened, please try again.';
   static const String errorInternetConnection =
       'Please check your internet connection.';
+  static const String errorBooksLoadingFailure = 'Failed to load books';
+  static const String errorServer = 'Server error occurred';
+  static const String errorUnexpected = 'Unexpected error: ';
+
+  // APIs
+  static const String getBooksApiUrl =
+      'https://api.itbook.store/1.0/search/mongodb';
 }
