@@ -5,7 +5,6 @@ part 'book.g.dart';
 @HiveType(typeId: 0)
 class Book {
   // Common fields
-
   @HiveField(0)
   final String title;
   @HiveField(1)

@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 
 class BookCard extends StatelessWidget {
   final Book book;
+  final bool isFavorite;
 
-  const BookCard({super.key, required this.book});
+  const BookCard({super.key, required this.book, this.isFavorite = false});
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +70,13 @@ class BookCard extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                       color: kSecondaryColor,
                     ),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  Visibility(
+                    visible: isFavorite,
+                    child: Icon(Icons.favorite, color: Colors.red),
                   ),
                 ],
               ),
