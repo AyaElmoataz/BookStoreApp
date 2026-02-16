@@ -1,20 +1,40 @@
-class Book {
+import 'package:hive/hive.dart';
+
+part 'book.g.dart';
+
+@HiveType(typeId: 0)
+class Book extends HiveObject {
   // Common fields
+
+  @HiveField(0)
   final String title;
+  @HiveField(1)
   final String subtitle;
+  @HiveField(2)
   final String isbn13;
+  @HiveField(3)
   final String price;
+  @HiveField(4)
   final String image;
+  @HiveField(5)
   final String url;
 
   // Details-only fields
+  @HiveField(6)
   final String? authors;
+  @HiveField(7)
   final String? publisher;
+  @HiveField(8)
   final String? isbn10;
+  @HiveField(9)
   final String? pages;
+  @HiveField(10)
   final String? year;
+  @HiveField(11)
   final String? rating;
+  @HiveField(12)
   final String? description;
+  @HiveField(13)
   final Map<String, String>? pdf;
 
   Book({
