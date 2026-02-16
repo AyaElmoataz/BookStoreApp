@@ -31,8 +31,4 @@ class AppStrings {
   static const String errorBooksLoadingFailure = 'Failed to load books';
   static const String errorServer = 'Server error occurred';
   static const String errorUnexpected = 'Unexpected error: ';
-
-  // APIs
-  static const String getBooksApiUrl =
-      'https://api.itbook.store/1.0/search/mongodb';
 }

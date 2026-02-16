@@ -2,7 +2,7 @@ import 'package:book_store_app/constants/app_colors.dart';
 import 'package:book_store_app/constants/app_strings.dart';
 import 'package:book_store_app/providers/book_provider.dart';
 import 'package:book_store_app/widgets/book_card.dart';
-import 'package:book_store_app/widgets/no_data_placeholder.dart';
+import 'package:book_store_app/widgets/error_placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -45,7 +45,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             ).showSnackBar(SnackBar(content: Text(err.toString())));
           });
           return Center(
-            child: NoDataPlaceholder(text: AppStrings.errorBooksLoadingFailure),
+            child: ErrorPlaceholder(text: AppStrings.errorBooksLoadingFailure),
           );
         },
 
