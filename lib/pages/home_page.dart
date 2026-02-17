@@ -1,6 +1,8 @@
 import 'package:book_store_app/constants/app_colors.dart';
 import 'package:book_store_app/constants/app_strings.dart';
+import 'package:book_store_app/pages/book_details_page.dart';
 import 'package:book_store_app/providers/book_provider.dart';
+import 'package:book_store_app/providers/favorites_provider.dart';
 import 'package:book_store_app/widgets/book_card.dart';
 import 'package:book_store_app/widgets/error_placeholder.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +24,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final booksAsync = ref.watch(booksProvider);
+    final favorites = ref.watch(favoritesProvider);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -53,7 +56,23 @@ class _HomePageState extends ConsumerState<HomePage> {
           return ListView.builder(
             itemCount: booksResponse.books.length,
             itemBuilder: (context, index) {
-              return BookCard(book: booksResponse.books[index]);
+              final book = booksResponse.books[index];
+
+              final isFavorite = favorites.any(
+                (fav) => fav.isbn13 == book.isbn13,
+              );
+
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => BookDetailsPage(isbn13: book.isbn13),
+                    ),
+                  );
+                },
+                child: BookCard(book: book, isFavorite: isFavorite),
+              );
             },
           );
         },
