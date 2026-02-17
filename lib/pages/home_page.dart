@@ -27,7 +27,6 @@ class _HomePageState extends ConsumerState<HomePage> {
     final favorites = ref.watch(favoritesProvider);
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: const Text(
