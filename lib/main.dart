@@ -23,32 +23,23 @@ class MainApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(appThemeProvider);
+    final themeAsync = ref.watch(appThemeProvider);
 
-    return themeMode.when(
-      data: (themeMode) {
+    return themeAsync.when(
+      data: (themeAsync) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
 
           // Light theme
           theme: ThemeData(
+            scaffoldBackgroundColor: Colors.white,
             brightness: Brightness.light,
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.blue,
-              brightness: Brightness.light,
-            ),
           ),
 
           // Dark theme
-          darkTheme: ThemeData(
-            brightness: Brightness.dark,
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.blue,
-              brightness: Brightness.dark,
-            ),
-          ),
+          darkTheme: ThemeData(brightness: Brightness.dark),
 
-          themeMode: themeMode,
+          themeMode: themeAsync,
 
           home: LoginPage(),
         );
