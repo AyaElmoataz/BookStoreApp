@@ -9,28 +9,41 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../pages/home_page.dart';
 
 // Simple Provider to access the controller
-final loginControllerProvider = Provider((ref) => LoginController(ref));
+final loginControllerProvider = Provider(
+  (ref) => LoginController(
+    ref,
+    auth: FirebaseAuth.instance,
+    networkService: NetworkService(),
+    validators: AuthValidators(),
+  ),
+);
 
 class LoginController {
   final Ref ref;
-  LoginController(this.ref);
+  final FirebaseAuth auth;
+  final NetworkService networkService;
+  final AuthValidators validators;
+
+  LoginController(
+    this.ref, {
+    required this.auth,
+    required this.networkService,
+    required this.validators,
+  });
 
   Future<void> login(
     BuildContext context,
     String email,
     String password,
   ) async {
-    String? authValidationResult = AuthValidators().validateAuth(
-      email,
-      password,
-    );
+    String? authValidationResult = validators.validateAuth(email, password);
 
     if (authValidationResult != null) {
       _showSnackBar(context, authValidationResult);
       return;
     }
 
-    if (!await NetworkService().isConnected() && context.mounted) {
+    if (!await networkService.isConnected() && context.mounted) {
       _showSnackBar(context, AppStrings.errorInternetConnection);
       return;
     }
@@ -39,7 +52,7 @@ class LoginController {
     ref.read(loginLoadingProvider.notifier).startLoading();
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await auth.signInWithEmailAndPassword(
         email: email.trim(),
         password: password,
       );

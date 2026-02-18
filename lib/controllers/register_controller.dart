@@ -8,28 +8,41 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../pages/home_page.dart';
 
-final registerControllerProvider = Provider((ref) => RegisterController(ref));
+final registerControllerProvider = Provider(
+  (ref) => RegisterController(
+    ref,
+    auth: FirebaseAuth.instance,
+    networkService: NetworkService(),
+    validators: AuthValidators(),
+  ),
+);
 
 class RegisterController {
   final Ref ref;
-  RegisterController(this.ref);
+  final FirebaseAuth auth;
+  final NetworkService networkService;
+  final AuthValidators validators;
+
+  RegisterController(
+    this.ref, {
+    required this.auth,
+    required this.networkService,
+    required this.validators,
+  });
 
   Future<void> register(
     BuildContext context,
     String email,
     String password,
   ) async {
-    String? authValidationResult = AuthValidators().validateAuth(
-      email,
-      password,
-    );
+    String? authValidationResult = validators.validateAuth(email, password);
 
     if (authValidationResult != null) {
       _showSnackBar(context, authValidationResult);
       return;
     }
 
-    if (!await NetworkService().isConnected() && context.mounted) {
+    if (!await networkService.isConnected() && context.mounted) {
       _showSnackBar(context, AppStrings.errorInternetConnection);
       return;
     }
@@ -38,7 +51,7 @@ class RegisterController {
     ref.read(registerLoadingProvider.notifier).startLoading();
 
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await auth.createUserWithEmailAndPassword(
         email: email.trim(),
         password: password,
       );
