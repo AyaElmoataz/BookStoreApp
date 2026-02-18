@@ -1,6 +1,7 @@
 import 'package:book_store_app/constants/app_colors.dart';
 import 'package:book_store_app/constants/app_strings.dart';
 import 'package:book_store_app/pages/book_details_page.dart';
+import 'package:book_store_app/providers/app_theme_provider.dart';
 import 'package:book_store_app/providers/book_provider.dart';
 import 'package:book_store_app/providers/favorites_provider.dart';
 import 'package:book_store_app/widgets/book_card.dart';
@@ -25,9 +26,9 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) {
     final booksAsync = ref.watch(booksProvider);
     final favorites = ref.watch(favoritesProvider);
+    final themeAsync = ref.watch(appThemeProvider);
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: const Text(
@@ -35,7 +36,53 @@ class _HomePageState extends ConsumerState<HomePage> {
           style: TextStyle(color: kPrimaryColor),
         ),
         centerTitle: true,
+        actions: [
+          themeAsync.when(
+            data: (themeMode) {
+              final isDark = themeMode == ThemeMode.dark;
+
+              return Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(isDark ? Icons.dark_mode : Icons.light_mode),
+                        const SizedBox(width: 6),
+                        Text(
+                          isDark ? "Dark Mode" : "Light Mode",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(
+                      height: 30,
+                      child: Switch(
+                        value: isDark,
+                        onChanged: (value) {
+                          ref
+                              .read(appThemeProvider.notifier)
+                              .setTheme(
+                                value ? ThemeMode.dark : ThemeMode.light,
+                              );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+            loading: () => const SizedBox(),
+            error: (_, __) => const SizedBox(),
+          ),
+        ],
       ),
+
       body: booksAsync.when(
         loading: () => const Center(
           child: CircularProgressIndicator(color: kPrimaryColor),

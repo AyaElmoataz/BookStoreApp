@@ -34,7 +34,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
       inAsyncCall: isLoading,
       progressIndicator: const CircularProgressIndicator(color: kPrimaryColor),
       child: Scaffold(
-        backgroundColor: Colors.white,
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Column(
