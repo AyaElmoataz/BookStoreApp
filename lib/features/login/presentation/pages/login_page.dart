@@ -1,8 +1,8 @@
 import 'package:book_store_app/constants/app_strings.dart';
 import 'package:book_store_app/constants/app_colors.dart';
 import 'package:book_store_app/pages/register_page.dart';
-import 'package:book_store_app/providers/login_loading_provider.dart';
-import 'package:book_store_app/controllers/login_controller.dart';
+import 'package:book_store_app/pages/home_page.dart';
+import 'package:book_store_app/features/login/presentation/providers/providers.dart';
 import 'package:book_store_app/widgets/custom_button.dart';
 import 'package:book_store_app/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +17,8 @@ class LoginPage extends ConsumerStatefulWidget {
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   void dispose() {
@@ -29,10 +29,29 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(loginLoadingProvider);
+    final loginState = ref.watch(loginControllerProvider);
+
+    // Listen for success to navigate
+    ref.listen(loginControllerProvider, (previous, next) {
+      next.whenOrNull(
+        data: (user) {
+          if (user != null) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const HomePage()),
+            );
+          }
+        },
+        error: (error, stack) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(error.toString())));
+        },
+      );
+    });
 
     return ModalProgressHUD(
-      inAsyncCall: isLoading,
+      inAsyncCall: loginState.isLoading,
       progressIndicator: const CircularProgressIndicator(color: kPrimaryColor),
       child: Scaffold(
         body: Padding(
@@ -69,13 +88,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ),
               const SizedBox(height: 10),
               CustomButton(
-                onTap: () => ref
-                    .read(loginControllerProvider)
-                    .login(
-                      context,
-                      emailController.text.trim(),
-                      passwordController.text.trim(),
-                    ),
+                onTap: () {
+                  ref
+                      .read(loginControllerProvider.notifier)
+                      .login(
+                        emailController.text.trim(),
+                        passwordController.text.trim(),
+                      );
+                },
                 text: AppStrings.loginButton,
               ),
               const Spacer(flex: 1),
@@ -89,7 +109,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   GestureDetector(
                     onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (c) => RegisterPage()),
+                      MaterialPageRoute(builder: (_) => const RegisterPage()),
                     ),
                     child: const Text(
                       AppStrings.registerLink,

@@ -1,19 +1,12 @@
-import 'package:book_store_app/constants/hive_constants.dart';
-import 'package:book_store_app/models/book.dart';
-import 'package:book_store_app/pages/login_page.dart';
+import 'package:book_store_app/core/injections.dart';
+import 'package:book_store_app/features/login/presentation/pages/login_page.dart';
 import 'package:book_store_app/providers/app_theme_provider.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await Hive.initFlutter();
-  Hive.registerAdapter(BookAdapter());
-  await Hive.openBox<Book>(HiveConstants.booksBox);
+  // Inject all dependencies
+  await initInjections();
 
   runApp(ProviderScope(child: MainApp()));
 }

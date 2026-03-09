@@ -1,4 +1,3 @@
-import 'package:book_store_app/controllers/login_controller.dart';
 import 'package:book_store_app/services/network_service.dart';
 import 'package:book_store_app/utils/auth_validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
